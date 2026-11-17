@@ -1,5 +1,5 @@
 {
-  "captured_utc": "2026-11-17T15:22:40.215529+00:00",
+  "captured_utc": "2026-11-17T15:28:21.369238+00:00",
   "source": "C:/backend",
   "python": "3.12.8",
   "files": [
@@ -61,10 +61,14 @@
     },
     {
       "path": "backend/main.py",
-      "bytes": 9360,
+      "bytes": 9512,
       "source_sha256": "1583be62cb82fc0de70e7a568ebcefd5b0a2e901d8dab963b97194841d563023",
-      "sha256": "1583be62cb82fc0de70e7a568ebcefd5b0a2e901d8dab963b97194841d563023",
-      "redacted_keys": []
+      "sha256": "9e9f1fc2aa59065ae277d3de005873f0f794534d2c6e0eeff36637fb7600352d",
+      "redacted_keys": [
+        "ADMIN_PASSWORD_SOURCE_DEFAULT",
+        "GUEST_PASSWORD_SOURCE_DEFAULT",
+        "USER_PASSWORD_SOURCE_DEFAULT"
+      ]
     },
     {
       "path": "backend/mqtt.py",

@@ -42,9 +42,9 @@ def seed_initial_records():
             db.add(Device(id=default_dev_id, name=default_dev_name, type="tomato_irrigation_3row", status="offline"))
 
         preset_accounts = [
-            (os.getenv("ADMIN_USERNAME", "admin").strip() or "admin", "Quản trị (Admin)", "admin", os.getenv("ADMIN_PASSWORD", "1111")),
-            (os.getenv("USER_USERNAME", "user").strip() or "user", "Vận hành (User)", "user", os.getenv("USER_PASSWORD", "2222")),
-            (os.getenv("GUEST_USERNAME", "guest").strip() or "guest", "Khách (Guest)", "guest", os.getenv("GUEST_PASSWORD", "3333")),
+            (os.getenv("ADMIN_USERNAME", "admin").strip() or "admin", "Quản trị (Admin)", "admin", os.getenv("ADMIN_PASSWORD", "REDACTED_ADMIN_PASSWORD_SOURCE_DEFAULT_RESTORE_FROM_ENV")),
+            (os.getenv("USER_USERNAME", "user").strip() or "user", "Vận hành (User)", "user", os.getenv("USER_PASSWORD", "REDACTED_USER_PASSWORD_SOURCE_DEFAULT_RESTORE_FROM_ENV")),
+            (os.getenv("GUEST_USERNAME", "guest").strip() or "guest", "Khách (Guest)", "guest", os.getenv("GUEST_PASSWORD", "REDACTED_GUEST_PASSWORD_SOURCE_DEFAULT_RESTORE_FROM_ENV")),
         ]
         for uname, display_name, role_val, raw_pw in preset_accounts:
             existing = db.query(User).filter(User.email == uname).first()

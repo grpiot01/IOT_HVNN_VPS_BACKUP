@@ -17,6 +17,7 @@ import subprocess
 import sys
 
 from dotenv import dotenv_values
+from secure_vps_github import github_env
 
 SOURCE = Path('C:/backend').resolve()
 DEST = Path('C:/vps-backups/IOT_HVNN_VPS_BACKUP').resolve()
@@ -29,7 +30,7 @@ TOKEN_PATTERNS = [re.compile(rb'gh[pousr]_[A-Za-z0-9]{20,}'), re.compile(rb'gith
 
 
 def run(args, **kwargs):
-    result = subprocess.run([str(x) for x in args], cwd=DEST, capture_output=True, text=True, encoding='utf-8', errors='replace', **kwargs)
+    result = subprocess.run([str(x) for x in args], cwd=DEST, capture_output=True, text=True, encoding='utf-8', errors='replace', env=github_env(), **kwargs)
     if result.returncode:
         # Credential and HTTP debug output must never be copied into logs.
         raise RuntimeError(f'{Path(str(args[0])).name} {args[1]} failed (exit {result.returncode})')
@@ -57,6 +58,12 @@ def prepare():
             elif isinstance(node,ast.Import):
                 pending.extend(alias.name.split('.')[0] for alias in node.names)
     files = [SOURCE/(module+'.py') for module in sorted(modules)]
+    for path in files:
+        for node in ast.walk(ast.parse(path.read_text(encoding='utf-8-sig'))):
+            if isinstance(node,ast.Call) and isinstance(node.func,ast.Attribute) and node.func.attr=='getenv' and len(node.args)>=2:
+                key,value=node.args[:2]
+                if isinstance(key,ast.Constant) and isinstance(key.value,str) and SECRET_KEY.search(key.value) and isinstance(value,ast.Constant) and isinstance(value.value,str) and len(value.value)>=4 and not value.value.startswith(('CHANGE_ME','REDACTED_')):
+                    secrets[key.value+'_SOURCE_DEFAULT']=value.value
     files.extend(SOURCE/name for name in ['requirements.txt','start-backend.bat','run-background.vbs'] if (SOURCE/name).is_file())
     for name in ['templates','static']:
         for path in (SOURCE/name).rglob('*'):
@@ -138,6 +145,9 @@ Chạy bằng Python venv trên VPS: `python C:\\vps-backups\\IOT_HVNN_VPS_BACKU
     helper=DEST/'tools/backup_vps_code.py'
     if Path(__file__).resolve()!=helper.resolve():
         shutil.copy2(__file__,helper)
+    security_helper=Path(__file__).with_name('secure_vps_github.py')
+    if security_helper.resolve()!=(DEST/'tools/secure_vps_github.py').resolve():
+        shutil.copy2(security_helper,DEST/'tools/secure_vps_github.py')
     manifest={'captured_utc':datetime.now(timezone.utc).isoformat(),'source':'C:/backend','python':sys.version.split()[0],'files':records,'excluded':['environment values','database','CSV and logs','water_offsets.json','firmware_uploads','deployment backups','tunnel credentials','Chrome profile'],'secret_scan':'Known environment secrets removed from selected source files; token/private-key patterns rejected before commit.'}
     (DEST/'snapshot-manifest.json').write_text(json.dumps(manifest,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
     print(json.dumps({'prepared':str(DEST),'files':len(records),'redacted_files':[r['path'] for r in records if r['redacted_keys']],'python':manifest['python']}))
@@ -182,7 +192,7 @@ def publish():
             raise RuntimeError('Forbidden file in staged snapshot: '+name)
     if staged:
         run([GIT,'commit','-m','Backup deployed VPS backend and web assets'])
-    exists=subprocess.run([str(GH),'repo','view',REPO,'--json','nameWithOwner,visibility'],cwd=DEST,capture_output=True,text=True)
+    exists=subprocess.run([str(GH),'repo','view',REPO,'--json','nameWithOwner,visibility'],cwd=DEST,capture_output=True,text=True,env=github_env())
     if exists.returncode:
         run([GH,'repo','create',REPO,'--private','--description','Independent backup of the deployed HVNN VPS backend and web; credentials and database excluded'])
     else:
