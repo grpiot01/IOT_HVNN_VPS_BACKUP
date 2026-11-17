@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Nạp USB · STM32F407VET6</title>
+  <meta name="description" content="Thử nạp STM32F407VET6 qua USB DFU, sao lưu và kiểm chứng dữ liệu.">
+  <link rel="stylesheet" href="/stm32-flash.css">
+</head>
+<body>
+<main>
+  <header><a href="/">← Web HMI</a><span>USB DFU / CỤC BỘ</span></header>
+  <h1>Nạp STM32 qua USB<span>STM32F407VET6</span></h1>
+  <p class="intro">Chọn firmware, sao lưu Flash, rồi nạp và đọc lại kiểm chứng. File được xử lý trên máy tính của bạn.</p>
+  <div class="layout">
+    <section class="card steps" aria-labelledby="prepare">
+      <h2 id="prepare">01 · Virtual COM → USB DFU</h2>
+      <ol>
+        <li>Ngắt nguồn tải như động cơ, bơm hoặc relay trước khi thử firmware.</li>
+        <li>Dùng cáp USB có dữ liệu, nối vào cổng <strong>USB của MCU</strong> (PA11/PA12).</li>
+        <li>Board đang chạy firmware sẽ hiện <strong>Virtual COM</strong>. Đóng terminal đang giữ cổng.</li>
+        <li>Bấm <strong>Gửi dfu qua Virtual COM</strong>, chọn đúng cổng của board. Sau khi board chuyển chế độ, bấm <strong>Kết nối USB DFU</strong> và chọn <strong>STM32 BOOTLOADER</strong>.</li>
+      </ol>
+      <label class="filelabel" for="ending">Kết thúc lệnh dfu</label>
+      <select id="ending"><option value="raw">Chỉ dfu (3 byte)</option><option value="lf">dfu + LF</option><option value="crlf">dfu + CRLF</option></select>
+      <button id="enterdfu">Gửi dfu qua Virtual COM</button>
+      <p class="small">Gửi đúng chuỗi <code>dfu</code> qua Web Serial, baud 115200. Chọn kiểu xuống dòng giống terminal bạn đang dùng. Gửi lệnh thành công chưa xác nhận board đã vào DFU; cần kết nối USB DFU ở bước 02.</p>
+      <details><summary>Dự phòng: vào DFU bằng jumper</summary><p>Nếu không còn Virtual COM: đặt BOOT0 = 1, BOOT1/PB2 = 0 rồi nhấn RESET. Sau khi nạp, đặt BOOT0 = 0 và nhấn RESET để chạy.</p></details>
+      <details><summary>Không thấy board hoặc không mở được USB?</summary><p>Kiểm tra cáp, cổng USB, jumper và RESET. F407 cần thạch anh HSE phù hợp để dùng ROM USB DFU. Trên Windows, giao diện DFU phải được gắn driver WinUSB để trình duyệt truy cập. Nếu dùng Zadig, chỉ chọn đúng STM32 BOOTLOADER (0483:DF11); việc đổi driver có thể ảnh hưởng các công cụ DFU khác. Đóng CubeProgrammer hoặc ứng dụng đang giữ USB rồi thử lại.</p></details>
+      <p class="small">USB DFU không xác nhận chính xác mã MCU. Kiểm tra dòng chữ trên chip; trang chỉ chấp nhận descriptor Flash 512 KiB phù hợp F407VE.</p>
+      <a class="source" href="https://www.st.com/resource/en/application_note/an2606-introduction-to-system-memory-boot-mode-stmicroelectronics.pdf" target="_blank" rel="noreferrer">Hướng dẫn bootloader ST ↗</a>
+    </section>
+    <section class="card" aria-labelledby="program">
+      <h2 id="program">02 · Kết nối và chọn firmware</h2>
+      <div id="status" role="status" aria-live="polite">Đang kiểm tra trình duyệt…</div>
+      <div class="buttons"><button id="connect">Kết nối USB DFU</button><button id="disconnect" class="secondary" disabled>Ngắt kết nối</button></div>
+      <label class="filelabel" for="firmware">Firmware .bin tại 0x08000000</label>
+      <input id="firmware" type="file" accept=".bin">
+      <p class="small">Dùng <strong>MM_control.bin</strong> trong thư mục <strong>firm stm32f407</strong> của bạn. Không chọn file ELF, HEX hoặc firmware F401.</p>
+      <pre id="fileinfo">Chưa chọn file.</pre>
+      <h2>03 · Sao lưu và nạp</h2>
+      <button id="backup" class="secondary" disabled>Tải bản sao lưu Flash 512 KiB</button>
+      <p class="small">Giữ file sao lưu tải về. Nếu chip khóa đọc, công cụ dừng; không tự gỡ bảo vệ.</p>
+      <label class="confirm"><input id="confirm" type="checkbox"> <span>Tôi xác nhận chip là F407VET6, file đúng cho board, đã lưu bản sao và đồng ý ghi đè các sector chứa chương trình.</span></label>
+      <button id="flash" disabled>Nạp và kiểm chứng</button>
+      <p class="small">Phần còn lại trong sector bị xóa cũng mất dữ liệu. Sau khi đọc lại khớp: đặt BOOT0 = 0, nhấn RESET để chạy. Kết quả kiểm chứng Flash chưa chứng minh ứng dụng chạy đúng.</p>
+      <progress id="progress" max="100" value="0" aria-label="Tiến độ nạp"></progress><p id="progresslabel" class="small">Sẵn sàng.</p>
+    </section>
+  </div>
+  <section class="card logcard"><div class="logheading"><h2>Nhật ký thao tác</h2><button id="savelog" class="secondary">Tải nhật ký</button></div><pre id="log" aria-live="polite">Chưa có thao tác USB.</pre></section>
+  <footer>Không gửi firmware lên máy chủ · Không tự chạy chương trình sau khi nạp · Không ghi option bytes</footer>
+</main>
+<script type="module" src="/stm32-flash-page.js"></script>
+</body>
+</html>
