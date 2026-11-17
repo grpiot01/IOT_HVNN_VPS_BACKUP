@@ -1,5 +1,5 @@
 {
-  "captured_utc": "2026-11-17T15:28:21.369238+00:00",
+  "captured_utc": "2026-11-17T15:39:25.833728+00:00",
   "source": "C:/backend",
   "python": "3.12.8",
   "files": [
@@ -122,8 +122,8 @@
     {
       "path": "backend/static/index.html",
       "bytes": 948,
-      "source_sha256": "02b1e33bcc0febd3e34fac729561342af0df084b1562185fab8b3346a7fe5352",
-      "sha256": "02b1e33bcc0febd3e34fac729561342af0df084b1562185fab8b3346a7fe5352",
+      "source_sha256": "b826ac7aff2a3278fad99652f7208cdbe39e0127b8c7d430868f85ec0f3ef0e2",
+      "sha256": "b826ac7aff2a3278fad99652f7208cdbe39e0127b8c7d430868f85ec0f3ef0e2",
       "redacted_keys": []
     },
     {
@@ -257,6 +257,13 @@
       "bytes": 80710,
       "source_sha256": "a002664bfa557d817d8bfeaf4c988606235d63dae28361ce9b277d38c1fb2136",
       "sha256": "a002664bfa557d817d8bfeaf4c988606235d63dae28361ce9b277d38c1fb2136",
+      "redacted_keys": []
+    },
+    {
+      "path": "backend/static/assets/GuideTab-q7RNbchr.js",
+      "bytes": 83457,
+      "source_sha256": "e9104e9da81ee2574b16e2bb54f48dfcb19f0a55e353f663689dab85458a319b",
+      "sha256": "e9104e9da81ee2574b16e2bb54f48dfcb19f0a55e353f663689dab85458a319b",
       "redacted_keys": []
     },
     {
@@ -512,6 +519,13 @@
       "redacted_keys": []
     },
     {
+      "path": "backend/static/assets/index-CuCdxWHK.css",
+      "bytes": 98233,
+      "source_sha256": "9a8f50915e614ee24057cc91af1163efa0e6ade7cf47effa4c02265e5c5a3d00",
+      "sha256": "9a8f50915e614ee24057cc91af1163efa0e6ade7cf47effa4c02265e5c5a3d00",
+      "redacted_keys": []
+    },
+    {
       "path": "backend/static/assets/index-CwHH2ams.js",
       "bytes": 435777,
       "source_sha256": "cc117afd772dd4e5b3a65a3e516aaa1f1bac1d6deb196b050d5544e526a0b8a2",
@@ -733,6 +747,13 @@
       "bytes": 465139,
       "source_sha256": "d8522b0c3c319d1aeb4161961a4386633450920ecaadfea8ec5dc1a4fbe1034b",
       "sha256": "d8522b0c3c319d1aeb4161961a4386633450920ecaadfea8ec5dc1a4fbe1034b",
+      "redacted_keys": []
+    },
+    {
+      "path": "backend/static/assets/index-Wvqy1YDh.js",
+      "bytes": 540800,
+      "source_sha256": "05315619b80239adbd062debb78bc00616088255b891a4dd75a8ca425007716e",
+      "sha256": "05315619b80239adbd062debb78bc00616088255b891a4dd75a8ca425007716e",
       "redacted_keys": []
     },
     {

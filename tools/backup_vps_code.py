@@ -168,7 +168,7 @@ def publish():
         run([GIT,'init','--initial-branch=main'])
     run([GIT,'config','user.name',account['login']])
     run([GIT,'config','user.email',f"{account['id']}+{account['login']}@users.noreply.github.com"])
-    run([GIT,'config','credential.helper',''])
+    run([GIT,'config','--replace-all','credential.helper',''])
     helper='!'+str(GH).replace('\\','/')+' auth git-credential'
     run([GIT,'config','--add','credential.helper',helper])
     run([GIT,'config','credential.useHttpPath','true'])
