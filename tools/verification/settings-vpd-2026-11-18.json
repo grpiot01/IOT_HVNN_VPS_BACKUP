@@ -1,0 +1,22 @@
+{
+  "verified_utc": "2026-11-18T01:27:09.983272+00:00",
+  "source": "C:/backend",
+  "public_url": "https://plantwatering.dpdns.org/",
+  "index_sha256": "3af2108c0f4fc141d43e18c9076b3df6d831734109a02a01e1dc0c8e17950915",
+  "health": "healthy",
+  "mqtt_connected": true,
+  "saved_vpd_threshold_kpa": 1.2,
+  "changes": [
+    "Frequently used irrigation settings moved to top; technical settings collapsed below",
+    "Corrected A/B/C card containment and B moisture/volume layout",
+    "C identifies multi-sensor irrigation and previews normal/hot-dry thresholds and volume",
+    "Default web and saved station VPD threshold set to 1.2 kPa"
+  ],
+  "verification_limits": [
+    "No browser visual acceptance",
+    "No STM32 configuration-applied acknowledgment",
+    "No hardware or water-delivery acceptance"
+  ],
+  "configuration_data_policy": "Only the VPD threshold is recorded here; full station configuration and database stay outside Git.",
+  "repository_audience": "PUBLIC, retained at the user explicit request on 2026-11-18"
+}
